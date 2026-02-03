@@ -118,33 +118,27 @@ return [
 */
 
     'connections' => [
-    'mysql' => [  // company1_db (default/main)
+    // MAIN (fixed)
+    'mysql' => [
         'driver' => 'mysql',
         'host' => env('DB_HOST'),
         'port' => env('DB_PORT'),
-        'database' => env('DB_DATABASE'),
+        'database' => env('DB_DATABASE'),  // main_db
         'username' => env('DB_USERNAME'),
         'password' => env('DB_PASSWORD'),
     ],
 
-    'seed' => [  // company2_db (seed/tenant)
-        'driver' => env('SEED_DB_CONNECTION', 'mysql'),
-        'host' => env('SEED_DB_HOST'),
-        'port' => env('SEED_DB_PORT'),
-        'database' => env('SEED_DB_DATABASE'),
-        'username' => env('SEED_DB_USERNAME'),
-        'password' => env('SEED_DB_PASSWORD'),
-    ],
-
-    'tenant' => [  // DYNAMIC switching
+    // TENANT (dynamic)
+    'tenant' => [
         'driver' => 'mysql',
-        'host' => env('DB_HOST'),
-        'port' => env('DB_PORT'),
-        'database' => null,  // ← Will be set dynamically
-        'username' => env('DB_USERNAME'),
-        'password' => env('DB_PASSWORD'),
+        'host' => env('TENANT_HOST'),
+        'port' => env('TENANT_PORT'),
+        'database' => env('TENANT_DATABASE'),  // null → company1_db
+        'username' => env('TENANT_USERNAME'),
+        'password' => env('TENANT_PASSWORD'),
     ],
 ],
+
 
     /*
     |--------------------------------------------------------------------------
