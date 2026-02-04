@@ -1,37 +1,40 @@
 <?php
-
 namespace App\Http\Middleware;
 
 use Closure;
-use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Response;
+use App\Models\Company;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 
 class SetCompanyDatabase
 {
-    /**
-     * Handle an incoming request.
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
-     */
-    public function handle(Request $request, Closure $next)
+    public function handle($request, Closure $next)
     {
-        $company = $request->route('company');
-
-        $databases = [
-            'company1' => 'company1_db',
-            'company2' => 'company2_db',
-        ];
-
-        if (!isset($databases[$company])) {
-            return response()->json(['error' => 'Company not found'], 404);
+        // Get the "company" parameter from the route URL (e.g. /api/{company}/users)
+        $companySlug = $request->route('company');
+        
+        // If no company slug is present in the route,
+        // skip tenant switching and continue the request
+        if (!$companySlug) {
+            return $next($request);
         }
+        
+        // Find the company using the slug to get tenant database details
+        // If not found, Laravel automatically returns a 404 error
+        $company = Company::where('slug', $companySlug)->firstOrFail();
+        
+        // Dynamically set the tenant database name for this request
+        Config::set('database.connections.tenant.database', $company->database_name);
 
-        // Switch tenant database dynamically
-        Config::set('database.connections.tenant.database', $databases[$company]);
+        // Clear any existing tenant database connection from memory
+        // This prevents using the wrong database
         DB::purge('tenant');
-        DB::reconnect('tenant');
 
+        // Reconnect to the tenant database using the updated configuration
+        DB::reconnect('tenant');
+        
+        // Continue processing the request with the correct tenant database
         return $next($request);
     }
+
 }

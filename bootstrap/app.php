@@ -1,5 +1,4 @@
 <?php
-
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -12,19 +11,18 @@ return Application::configure(basePath: dirname(__DIR__))
         commands: __DIR__.'/../routes/console.php',
         health: '/up',
     )
+    ->withCommands([
+        MigrateTenantCommand::class,  // ← REGISTER HERE
+    ])
     ->withMiddleware(function (Middleware $middleware) {
-        $middleware->api(prepend: [
-            SetCompanyDatabase::class,
-        ]);
-        
         $middleware->alias([
             'company.db' => SetCompanyDatabase::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
-        $exceptions->render(function (\Illuminate\Database\Eloquent\ModelNotFoundException $e, \Illuminate\Http\Request $request) {
-            if ($request->expectsJson() || $request->is('api/*')) {
-                return response()->json(['status' => 'error', 'message' => 'Resource not found'], 404);
+        $exceptions->render(function (\Illuminate\Database\Eloquent\ModelNotFoundException $e, $request) {
+            if ($request->expectsJson()) {
+                return response()->json(['message' => 'Resource not found'], 404);
             }
         });
     })->create();

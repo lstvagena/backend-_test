@@ -118,28 +118,26 @@ return [
 */
 
     'connections' => [
-    // MAIN (fixed)
-    'mysql' => [
-        'driver' => 'mysql',
-        'host' => env('DB_HOST'),
-        'port' => env('DB_PORT'),
-        'database' => env('DB_DATABASE'),  // main_db
-        'username' => env('DB_USERNAME'),
-        'password' => env('DB_PASSWORD'),
+        // MAIN (fixed)
+        'mysql' => [
+            'driver' => 'mysql',
+            'host' => env('DB_HOST'),
+            'port' => env('DB_PORT'),
+            'database' => env('DB_DATABASE'),  // main_db
+            'username' => env('DB_USERNAME'),
+            'password' => env('DB_PASSWORD'),
+        ],
+    
+        // TENANT (dynamic)
+        'tenant' => [
+            'driver' => 'mysql',
+            'host' => env('TENANT_HOST'),
+            'port' => env('TENANT_PORT'),
+            'database' => env('TENANT_DATABASE'),  // null → company1_db
+            'username' => env('TENANT_USERNAME'),
+            'password' => env('TENANT_PASSWORD'),
+        ],
     ],
-
-    // TENANT (dynamic)
-    'tenant' => [
-        'driver' => 'mysql',
-        'host' => env('TENANT_HOST'),
-        'port' => env('TENANT_PORT'),
-        'database' => env('TENANT_DATABASE'),  // null → company1_db
-        'username' => env('TENANT_USERNAME'),
-        'password' => env('TENANT_PASSWORD'),
-    ],
-],
-
-
     /*
     |--------------------------------------------------------------------------
     | Migration Repository Table

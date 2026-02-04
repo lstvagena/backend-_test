@@ -17,7 +17,7 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             CompanySeeder::class,   // Creates companies in main DB
-            TenantSeeder::class,    // Creates users in tenant DBs
+           // TenantSeeder::class,    // Creates users in tenant DBs
             CentralUserSeeder::class,
         ]);
     }

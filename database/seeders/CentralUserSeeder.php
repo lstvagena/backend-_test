@@ -1,5 +1,4 @@
 <?php
-
 namespace Database\Seeders;
 
 use App\Models\CentralUser;
@@ -11,7 +10,6 @@ class CentralUserSeeder extends Seeder
     public function run(): void
     {
         $companies = Company::all();
-        
         foreach ($companies as $company) {
             CentralUser::create([
                 'email' => 'admin@' . $company->slug . '.com',

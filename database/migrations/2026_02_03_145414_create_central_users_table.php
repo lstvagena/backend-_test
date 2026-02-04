@@ -9,16 +9,16 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
-    {
+    public function up(): void {
         Schema::create('central_users', function (Blueprint $table) {
             $table->id();
             $table->string('email')->unique();
-            $table->string('company_slug');  // Links to company1/company2
-            $table->string('tenant_user_id');  // Links to tenant DB user ID
+            $table->string('company_slug');
+            $table->unsignedBigInteger('tenant_user_id')->nullable();
             $table->timestamps();
+            
+            $table->foreign('company_slug')->references('slug')->on('companies');
         });
-
     }
 
     /**

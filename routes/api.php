@@ -1,27 +1,35 @@
 <?php
-
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\UserController;
-use Illuminate\Support\Facades\Route;
 
+    // Register a new user  
+Route::post('auth/register', [AuthController::class, 'register']);
 
-Route::prefix('{company}')->group(function () {
-    Route::get('users', [UserController::class, 'index']);      // ✅ GET
-    Route::post('users', [UserController::class, 'store']);     // ✅ POST ADDED
-});
+// Login user and return API token  
+Route::post('auth/login', [AuthController::class, 'login']);
 
-// PUBLIC AUTH (no company prefix)
-Route::post('/auth/register', [AuthController::class, 'register']);
-Route::post('/auth/login', [AuthController::class, 'login']);
-
-// PROTECTED ROUTES (after auth)
+// Routes that require a valid Sanctum API token
 Route::middleware('auth:sanctum')->group(function () {
+
+    // Return the currently authenticated user
     Route::get('/auth/me', fn() => auth()->user());
-    Route::post('/auth/logout', fn(Request $request) => $request->user()->currentAccessToken()->delete());
+
+    // Logout the user by deleting the current API token
+    Route::post('/auth/logout', fn($request) =>
+        $request->user()->currentAccessToken()->delete()
+    );
 });
 
-// COMPANY ROUTES (tenant-specific data)
-Route::prefix('{company}')->middleware(['auth:sanctum', 'company.db'])->group(function () {
-    Route::apiResource('users', UserController::class);
-});
+// Routes that are scoped to a specific company (tenant)
+Route::prefix('{company}')
+
+    // Apply tenant database switching + authentication
+    ->middleware(['company.db', 'auth:sanctum'])
+
+    // Group all tenant-based routes
+    ->group(function () {
+
+        // RESTful API routes for users within a tenant
+        Route::apiResource('users', UserController::class);
+    });
