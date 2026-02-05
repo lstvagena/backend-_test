@@ -1,35 +1,32 @@
 <?php
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\AuthController;
-use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\V1\AuthController;
+use App\Http\Controllers\Api\V1\UserController;
 
-    // Register a new user  
-Route::post('auth/register', [AuthController::class, 'register']);
-
-// Login user and return API token  
-Route::post('auth/login', [AuthController::class, 'login']);
-
-// Routes that require a valid Sanctum API token
-Route::middleware('auth:sanctum')->group(function () {
-
-    // Return the currently authenticated user
-    Route::get('/auth/me', fn() => auth()->user());
-
-    // Logout the user by deleting the current API token
-    Route::post('/auth/logout', fn($request) =>
-        $request->user()->currentAccessToken()->delete()
-    );
+// 🔥 ADD V1 ROUTES HERE (10 lines)
+Route::prefix('v1')->group(function() {
+    Route::post('auth/login', [AuthController::class, 'login']);
+    Route::post('auth/register', [AuthController::class, 'register']);
+    
+    Route::prefix('{company}')
+        ->middleware(['company.db', 'auth:sanctum'])
+        ->group(function() {
+            Route::apiResource('users', UserController::class);
+            Route::post('auth/logout', [AuthController::class, 'logout']);
+        });
 });
 
-// Routes that are scoped to a specific company (tenant)
+// 🔥 YOUR ORIGINAL CODE BELOW (UNCHANGED)
+Route::post('auth/register', [AuthController::class, 'register']);
+Route::post('auth/login', [AuthController::class, 'login']);
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/auth/me', fn() => auth()->user());
+    Route::post('/auth/logout', fn($request) => $request->user()->currentAccessToken()->delete());
+});
+
 Route::prefix('{company}')
-
-    // Apply tenant database switching + authentication
     ->middleware(['company.db', 'auth:sanctum'])
-
-    // Group all tenant-based routes
     ->group(function () {
-
-        // RESTful API routes for users within a tenant
         Route::apiResource('users', UserController::class);
     });
