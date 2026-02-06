@@ -4,42 +4,42 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\V1\LoginRequest;
 use App\Http\Requests\Api\V1\RegisterRequest;
-use App\Http\Resources\Api\V1\AuthResource;
 use App\Services\TenantAuthService;
-use Illuminate\Http\JsonResponse;
 
 class AuthController extends Controller
 {
-    public function __construct(
-        private readonly TenantAuthService $tenantAuthService
-    ) {}
+    protected $tenantAuthService;
 
-    /**
-     * Authenticate user and return tenant token
-     */
-    public function login(LoginRequest $request): AuthResource
+    public function __construct(TenantAuthService $tenantAuthService)
     {
-        $result = $this->tenantAuthService->login($request->validated());
-        return new AuthResource($result);
+        $this->tenantAuthService = $tenantAuthService;
     }
 
-    /**
-     * Register user in central + tenant DBs
-     */
-    public function register(RegisterRequest $request): AuthResource
+    public function login(LoginRequest $request)
     {
-        $result = $this->tenantAuthService->register($request->validated());
-        return new AuthResource($result);
+        $res = $this->tenantAuthService->login($request->validated());
+
+        if ($res['status'] === 'success') {
+            return response()->json($res, 200);
+        }
+
+        return response()->json($res, 401);
     }
 
-    /**
-     * Revoke current access token
-     */
-    public function logout(): JsonResponse
+    public function register(RegisterRequest $request)
     {
-        $this->tenantAuthService->logout();
-        return response()->json([
-            'message' => 'Logged out successfully'
-        ]);
+        $res = $this->tenantAuthService->register($request->validated());
+
+        if ($res['status'] === 'success') {
+            return response()->json($res, 201);
+        }
+
+        return response()->json($res, 400);
+    }
+
+    public function logout()
+    {
+        $res = $this->tenantAuthService->logout();
+        return response()->json($res, 200);
     }
 }
