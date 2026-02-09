@@ -16,9 +16,10 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
-            CompanySeeder::class,   // Creates companies in main DB
-           // TenantSeeder::class,    // Creates users in tenant DBs
-            CentralUserSeeder::class,
+            CompanyProgconfSeeder::class,   // Creates companies in main DB
+            
+            UserSeeder::class, 
+             SecurityParameterSeeder::class, 
         ]);
     }
 }

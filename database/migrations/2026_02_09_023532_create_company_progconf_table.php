@@ -11,22 +11,22 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // database/migrations/create_companies_table.php
-        Schema::create('companies', function (Blueprint $table) {
+        Schema::create('company_progconf', function (Blueprint $table) {
             $table->id();
-            $table->string('slug')->unique();  // company1, company2
-            $table->string('database_name');
-            $table->string('name');
+            $table->string('comcde', 50)->index(); // company code
+            $table->string('appcde', 20)->index(); // HR, PAYROLL, etc
+            $table->longText('fcon'); // encrypted DB credentials
             $table->timestamps();
+            $table->unique(['comcde', 'appcde']);
         });
-
     }
+
 
     /**
      * Reverse the migrations.
      */
     public function down(): void
     {
-        Schema::dropIfExists('companies');
+        Schema::dropIfExists('company_progconf');
     }
 };

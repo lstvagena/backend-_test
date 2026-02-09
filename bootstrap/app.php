@@ -2,7 +2,7 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
-use App\Http\Middleware\SetCompanyDatabase;
+use App\Http\Middleware\ValidateAuthCookie;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -14,10 +14,9 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withCommands([
         MigrateTenantCommand::class,  // ← REGISTER HERE
     ])
-    ->withMiddleware(function (Middleware $middleware) {
-        $middleware->alias([
-            'company.db' => SetCompanyDatabase::class,
-        ]);
+    ->withMiddleware(function (Middleware $middleware): void {
+        $middleware->api(prepend: [ValidateAuthCookie::class]);
+
     })
     ->withExceptions(function (Exceptions $exceptions) {
         $exceptions->render(function (\Illuminate\Database\Eloquent\ModelNotFoundException $e, $request) {

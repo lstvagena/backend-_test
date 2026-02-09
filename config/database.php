@@ -138,6 +138,7 @@ return [
             'password' => env('TENANT_PASSWORD'),
         ],
     ],
+    
     /*
     |--------------------------------------------------------------------------
     | Migration Repository Table

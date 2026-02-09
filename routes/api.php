@@ -33,7 +33,7 @@ Route::prefix('{company}')
     });
 */
 
-
+/* 
 Route::prefix('v1')->name('api.v1.')->group(function () {
     // Public auth routes (NO company prefix needed)
     Route::post('auth/login', [AuthController::class, 'login']);
@@ -47,4 +47,12 @@ Route::prefix('v1')->name('api.v1.')->group(function () {
             Route::post('auth/logout', [AuthController::class, 'logout']);
             Route::apiResource('users', UserController::class);
         });
+});*/
+
+Route::prefix('v1/auth')         
+    ->name('api.v1.auth.')
+    ->group(function () {
+        foreach (glob(__DIR__ . '/auth/*_api.php') as $file) {
+            require $file;
+    }
 });
