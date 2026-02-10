@@ -31,7 +31,7 @@ class UserActivityHelper
             'user_id' => $user->user_id,
             'event' => $activity['event'],
             'auditable_type' => $activity['auditable_type'],
-            'auditable_id' => $activity['auditable_id'] ?? null,
+          //  'auditable_id' => $activity['auditable_id'] ?? null,
             'old_value' => $activity['old_value'],
             'new_value' => $activity['new_value'],
             'url' => Request::url(),

@@ -14,6 +14,18 @@ class AuthHelper
         ];
     }
 
+    //for register response
+    public static function onSuccess2( ?string $token = null, ?string $company = null, $user = null, string $action = 'register'): array
+    {
+        return [
+            'status' => 'success',
+            'message' => 'Registration successful',
+            'token' => $token,
+            'company' => $company,
+            ...(isset($user) ? ['user' => $user] : [])
+        ];
+    }
+
     public static function onError(string $key, bool $isGeneric = false, $extraData = null): array
     {
         $errors = [
