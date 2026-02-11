@@ -42,5 +42,7 @@ Route::prefix('v1')
             });
 
         // utilities
-        require __DIR__ . '/utilities/user_api.php';
+        foreach (glob(__DIR__ . '/utilities/*_api.php') as $file) {
+        require $file;
+    }
     });

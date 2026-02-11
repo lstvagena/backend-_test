@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Api\V1\Utilities;
 
 use App\Http\Controllers\Controller;
 use App\Services\Utilities\UserService;
+use App\Http\Requests\Api\V1\Utilities\StoreUserRequest;
+use App\Http\Requests\Api\V1\Utilities\UpdateUserRequest;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -30,6 +32,20 @@ class UserController extends Controller
     {
         return response()->json(
             $this->service->fetchUsers($request) // pass whole request to service
+        );
+    }
+
+    public function store(StoreUserRequest $request)
+    {
+        return response()->json(
+            $this->service->createUser($request->validated())
+        );
+    }
+
+    public function update(UpdateUserRequest $request, $id)
+    {
+        return response()->json(
+            $this->service->updateUser($id, $request->validated())
         );
     }
 

@@ -17,11 +17,37 @@ class UserService
     // Returns paginated users in a standard API response format
     public function fetchUsers(Request $request)
     {
-        $perPage = $request->get('per_page', 3); // service now controls pagination logic
+        // Get per-page value from query string (defaults to 3)
+        $perPage = $request->get('per_page', 3);
+
+        // Call repository method that runs the DB query
+        $users = $this->repository->paginateUsers($perPage);
+
+        // Return structured service response (no queries in return)
+        return [
+            'status' => 'success',
+            'data'   => $users,
+        ];
+    }
+
+
+    public function createUser($data)
+    {
+        $user = $this->repository->createUser($data);
 
         return [
             'status' => 'success',
-            'data'   => $this->repository->paginateUsers($perPage),
+            'data'   => $user
+        ];
+    }
+
+    public function updateUser($id, $data)
+    {
+        $user = $this->repository->updateUser($id, $data);
+
+        return [
+            'status' => 'success',
+            'data'   => $user
         ];
     }
 

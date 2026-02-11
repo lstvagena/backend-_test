@@ -4,6 +4,7 @@ namespace App\Repositories\Utilities;
 
 use App\Interfaces\Utilities\UserInterface; 
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 
 class UserRepository implements UserInterface
 {
@@ -11,14 +12,33 @@ class UserRepository implements UserInterface
     {
         return User::orderBy('id', 'asc')
             ->paginate($perPage);
+    }   
+
+    public function createUser($data)
+    {
+        $data['password'] = Hash::make($data['password']);
+
+        return User::create($data);
     }
 
-    // REQUIRED because interface defines them
-    public function createUser($data) {}
+    public function updateUser($id, $data)
+    {
+        $user = User::findOrFail($id);
+
+        if (isset($data['password'])) {
+            $data['password'] = Hash::make($data['password']);
+        }
+
+        $user->update($data);
+
+        return $user;
+    }
+
+
     public function createUserMenu($data) {}
     public function createUserMenuAction($data) {}
     public function getUsers($request) {}
-    public function updateUser($id, $data) {}
+    
     public function updateUserMenus($userId, $menuIds) {}
     public function updateUserMenuActions($userId, $menuActionIds) {}
     public function deleteUser($id) {}
