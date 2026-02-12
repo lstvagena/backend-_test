@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\V1\FileExport\UserExportController;
 
 /*{
 Route::prefix('v1/auth')         
@@ -42,7 +43,15 @@ Route::prefix('v1')
             });
 
         // utilities
-        foreach (glob(__DIR__ . '/utilities/*_api.php') as $file) {
-        require $file;
-    }
+        foreach (glob(__DIR__ . '/../routes/utilities/*_api.php') as $file) {
+            require $file;
+        }
+
+        foreach (glob(__DIR__ . '/../routes/reports/*_api.php') as $file) {
+            require $file;
+        }
+
+
+
     });
+

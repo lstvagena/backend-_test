@@ -34,6 +34,12 @@ class UserRepository implements UserInterface
         return $user;
     }
 
+    public function getAllUsers()
+    {
+        return User::orderBy('id', 'asc')->get();
+    }
+
+
 
     public function createUserMenu($data) {}
     public function createUserMenuAction($data) {}
