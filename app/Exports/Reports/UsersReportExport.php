@@ -27,104 +27,119 @@ class UsersReportExport implements
     WithHeadings,
     WithMapping,
     WithEvents,
-    WithCustomStartCell,
+    WithCustomStartCell,    
     WithColumnWidths,
     WithStyles
 {
+    // Holds export rows
     protected Collection $rows;
 
+    // Inject rows collection
     public function __construct(Collection $rows)
     {
-        $this->rows = $rows;
+        $this->rows = $rows; // Assign rows
     }
 
+    // Return collection for export
     public function collection(): Collection
     {
-        return $this->rows;
+        return $this->rows; // Provide data
     }
 
+    // Map each row to Excel columns
     public function map($row): array
     {
         return [
-            $row['ID'] ?? '',
-            $row['Username'] ?? '',
-            $row['Name'] ?? '',
-            $row['Email'] ?? '',
-            $row['Created At'] ?? '',
+            $row['ID'] ?? '',          // User ID
+            $row['User Type'] ?? '', 
+            $row['Username'] ?? '',    // Username
+            $row['Name'] ?? '',        // Full name
+            $row['Email'] ?? '',       // Email address
+            $row['Created At'] ?? '',  // Creation date
         ];
     }
 
+    // Define table headers
     public function headings(): array
     {
         return [
-            'ID',
-            'Username',
-            'Name',
-            'Email',
-            'Created At',
+            'ID',          // Column A
+            'User Type', 
+            'Username',    // Column B
+            'Name',        // Column C
+            'Email',       // Column D
+            'Created At',  // Column E
         ];
     }
 
+    // Set starting cell for table
     public function startCell(): string
     {
-        return 'A5';
+        return 'A5'; // Data begins at row 5
     }
 
+    // Set column widths
     public function columnWidths(): array
     {
         return [
-            'A' => 10,
-            'B' => 25,
-            'C' => 25,
-            'D' => 35,
-            'E' => 20,
+            'A' => 10, // ID width
+            'B' => 20,
+            'C' => 25, // Username width
+            'D' => 25, // Name width
+            'E' => 35, // Email width
+            'F' => 20, // Created At width
         ];
     }
 
+    // Apply sheet styles
     public function styles(Worksheet $sheet)
     {
         return [
-            5 => [
-                'font' => ['bold' => true],
+            5 => [ // Header row
+                'font' => ['bold' => true], // Bold text
                 'alignment' => [
-                    'horizontal' => Alignment::HORIZONTAL_CENTER,
-                    'vertical' => Alignment::VERTICAL_CENTER,
+                    'horizontal' => Alignment::HORIZONTAL_CENTER, // Center horizontally
+                    'vertical' => Alignment::VERTICAL_CENTER,     // Center vertically
                 ],
             ],
         ];
     }
 
+    // Register sheet events
     public function registerEvents(): array
     {
         return [
+
+            // Before sheet is generated
             BeforeSheet::class => function (BeforeSheet $event) {
 
-                $sheet = $event->sheet->getDelegate();
+                $sheet = $event->sheet->getDelegate(); // Get worksheet
 
-                $sheet->setCellValue('A1', 'Lee Systems Technology Ventures, Inc.');
-                $sheet->setCellValue('A2', 'Users Report');
-                $sheet->setCellValue('A3', 'Date Printed: ' . Carbon::now()->format('F d, Y, h:i A'));
+                $sheet->setCellValue('A1', 'Lee Systems Technology Ventures, Inc.'); // Company name
+                $sheet->setCellValue('A2', 'Users Report'); // Report title
+                $sheet->setCellValue('A3', 'Date Printed: ' . Carbon::now()->format('F d, Y, h:i A')); // Print date
 
-                $sheet->getStyle('A1')->getFont()->setBold(true)->setSize(14);
-                $sheet->getStyle('A2')->getFont()->setBold(true)->setSize(12);
+                $sheet->getStyle('A1')->getFont()->setBold(true)->setSize(14); // Style company
+                $sheet->getStyle('A2')->getFont()->setBold(true)->setSize(12); // Style title
             },
 
+            // After sheet is generated
             AfterSheet::class => function (AfterSheet $event) {
 
-                $sheet = $event->sheet->getDelegate();
+                $sheet = $event->sheet->getDelegate(); // Get worksheet
 
-                $lastColumn = Coordinate::stringFromColumnIndex(count($this->headings()));
-                $headerRange = 'A5:' . $lastColumn . '5';
+                $lastColumn = Coordinate::stringFromColumnIndex(count($this->headings())); // Last column
+                $headerRange = 'A5:' . $lastColumn . '5'; // Header range
 
                 $sheet->getStyle($headerRange)->applyFromArray([
-                    'font' => ['bold' => true, 'size' => 11],
+                    'font' => ['bold' => true, 'size' => 11], // Header font
                     'fill' => [
-                        'fillType' => Fill::FILL_SOLID,
-                        'startColor' => ['rgb' => 'D3D3D3'],
+                        'fillType' => Fill::FILL_SOLID, // Solid fill
+                        'startColor' => ['rgb' => 'D3D3D3'], // Gray background
                     ],
                 ]);
 
-                $sheet->setAutoFilter($headerRange);
+                $sheet->setAutoFilter($headerRange); // Enable filter
             },
         ];
     }

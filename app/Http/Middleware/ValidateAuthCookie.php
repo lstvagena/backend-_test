@@ -28,9 +28,13 @@ class ValidateAuthCookie
   public function handle(Request $request, Closure $next): Response
   {
     // Skip authentication and DB switching for login and logout routes
-    if ($request->is('api/v1/auth/login')) {
-      return $next($request); // Immediately continue to controller
+    if (in_array($request->path(), [
+      'api/v1/auth/login',
+      'api/v1/auth/register'
+    ])) {
+        return $next($request);
     }
+
 
     // Retrieve auth token from cookies
     $authToken = $request->cookie('auth_token');

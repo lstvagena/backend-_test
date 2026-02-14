@@ -49,4 +49,14 @@ class UserController extends Controller
         );
     }
 
+    public function excel()
+    {
+        return $this->service->exportExcel();
+    }
+
+    public function pdf()
+    {
+        return $this->service->exportPdf();
+    }
+
 }

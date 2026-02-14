@@ -7,6 +7,7 @@ interface UserInterface
     public function paginateUsers(int $perPage);
     public function updateUser($id, $data);
     public function createUser($data);
+    public function exportUsers(); 
 
     public function createUserMenu($data);
     public function createUserMenuAction($data);

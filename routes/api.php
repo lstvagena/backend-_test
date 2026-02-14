@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\V1\FileExport\UserExportController;
 
 /*{
 Route::prefix('v1/auth')         

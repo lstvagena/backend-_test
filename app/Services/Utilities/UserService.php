@@ -3,6 +3,9 @@
 namespace App\Services\Utilities;
 use Illuminate\Http\Request;
 use App\Interfaces\Utilities\UserInterface;
+use App\Exports\UsersExport;
+use Maatwebsite\Excel\Facades\Excel;
+use PDF;
 
 class UserService
 {
@@ -30,7 +33,6 @@ class UserService
         ];
     }
 
-
     public function createUser($data)
     {
         $user = $this->repository->createUser($data);
@@ -49,6 +51,22 @@ class UserService
             'status' => 'success',
             'data'   => $user
         ];
+    }
+
+    public function exportExcel()   
+    {
+        $users = $this->repository->exportUsers();
+
+        return Excel::download(new UsersExport($users), 'users.xlsx');
+    }
+
+    public function exportPdf()
+    {
+        $users = $this->repository->exportUsers();
+
+        $pdf = PDF::loadView('pdf.reports.user-files', ['userFiles' => $users]); //pass data to view
+
+        return $pdf->download('users.pdf');
     }
 
 }

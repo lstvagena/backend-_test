@@ -24,6 +24,7 @@ class UpdateUserRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'user_type_id' => 'exists:user_types,id',
             'username' => 'nullable|unique:users,username,' . $this->route('id'),
             'name'     => 'sometimes|string|max:255',
             'email'    => 'sometimes|email|unique:users,email,' . $this->route('id'),
@@ -34,6 +35,7 @@ class UpdateUserRequest extends FormRequest
     public function messages(): array
     {
         return [
+            'user_type_id.exists'   => 'Selected user type does not exist.',
             'username.unique'       => 'Username already exists',
             'email.unique'       => 'Email already exists',
           //  'password.required'     => 'Password is required',

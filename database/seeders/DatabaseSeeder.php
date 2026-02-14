@@ -17,9 +17,9 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             CompanyProgconfSeeder::class,   // Creates companies in main DB
-            
+            UserTypeSeeder::class,
             UserSeeder::class, 
-             SecurityParameterSeeder::class, 
+            SecurityParameterSeeder::class, 
         ]);
     }
 }
