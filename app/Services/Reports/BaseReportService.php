@@ -20,12 +20,11 @@ abstract class BaseReportService
     // Child class must define the base filename for exports
     abstract protected function getFilename(): string;
 
-
     /*
       Ask Repository to fetch data from database
     | Transform data (mainly for Excel format)
     | Decide whether to generate Excel or PDF
-     */
+    */
     public function export(Request $request, string $type = 'pdf')
     {
        $filters = $request->all(); 
