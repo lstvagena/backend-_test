@@ -35,7 +35,7 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\r\n    \"company_code\":\"abc\",\r\n    \"username\":\"MArk3aasasasas22\",\r\n    \"password\":\"Password\"\r\n}",
+          "raw": "{\r\n  \"company_code\": \"abc\",\r\n  \"username\": \"lstvsupervisor\",\r\n  \"password\": \"Password\"\r\n}\r\n",
           "options": {
             "raw": {
               "language": "json"
@@ -67,7 +67,7 @@
         "header": [],
         "body": {
           "mode": "raw",
-          "raw": "{\r\n  \"company_code\": \"abc\",\r\n  \"username\": \"mark22\",\r\n  \"password\": \"Password\"\r\n}\r\n",
+          "raw": "{\r\n  \"company_code\": \"abc\",\r\n  \"username\": \"dsadsdsadadasdasdasdasdad\",\r\n  \"password\": \"Passwdssssasdssasasaaord\"\r\n}\r\n",
           "options": {
             "raw": {
               "language": "json"
@@ -75,14 +75,13 @@
           }
         },
         "url": {
-          "raw": "{{base_url}}/api/v1/auth/auth/register",
+          "raw": "{{base_url}}/api/v1/auth/register",
           "host": [
             "{{base_url}}"
           ],
           "path": [
             "api",
             "v1",
-            "auth",
             "auth",
             "register"
           ]
